@@ -1,13 +1,13 @@
 package common
 
 import (
+	"fmt"
 	"os/exec"
 	"strings"
-	"fmt"
 )
 
 func InGitRepository() bool {
-	if ! CommandExists("git") {
+	if !CommandExists("git") {
 		return false
 	}
 

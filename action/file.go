@@ -1,14 +1,14 @@
 package action
 
 import (
+	"fmt"
 	cmn "github.com/nobeans/peco-actions/common"
 	"log"
+	"os/exec"
 	"path/filepath"
-	"strings"
 	"regexp"
 	"strconv"
-	"os/exec"
-	"fmt"
+	"strings"
 )
 
 type (
@@ -78,7 +78,7 @@ func linesToPaths(lines []string) ([]string, int) {
 			lineNum, _ := strconv.Atoi(tokens[1])
 
 			// Remove duplication
-			if ! cmn.Include(paths, path) {
+			if !cmn.Include(paths, path) {
 				paths = append(paths, path)
 
 				if lineNumOfFirstFile < 0 {
@@ -89,7 +89,7 @@ func linesToPaths(lines []string) ([]string, int) {
 	} else {
 		for _, path := range lines {
 			// Remove duplication
-			if ! cmn.Include(paths, path) {
+			if !cmn.Include(paths, path) {
 				paths = append(paths, path)
 			}
 		}
@@ -113,13 +113,13 @@ func editorCommandLine(path string, lineNum int) string {
 	if regexp.MustCompile("(vi|vim)$").MatchString(cmd) {
 		// Default line for first file
 		if lineNum > 0 {
-			cl = append(cl, "+" + strconv.Itoa(lineNum))
+			cl = append(cl, "+"+strconv.Itoa(lineNum))
 		}
 
 		// Highlight in vim
 		pattern := cmn.Env("PECO_ACTIONS_EDITOR_PATTERN", "")
 		if len(pattern) > 0 {
-			cl = append(cl, "+/\"\\c" + pattern + "\"")
+			cl = append(cl, "+/\"\\c"+pattern+"\"")
 		}
 	}
 
