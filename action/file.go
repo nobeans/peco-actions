@@ -67,21 +67,33 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 
 func linesToPaths(lines []string) ([]string, int) {
 	// Support "path:lineNum:lineString" as grep result (lineString is ignored)
+
 	paths := make([]string, 0)
 	lineNumOfFirstFile := -1
-	if len(paths) > 0 && isGrepFormat(lines[0]) {
-		for i, line := range lines {
+
+	if len(lines) > 0 && isGrepFormat(lines[0]) {
+		for _, line := range lines {
 			tokens := strings.SplitN(line, ":", 3)
-			paths[i] = tokens[0]
-			if lineNumOfFirstFile < 0 {
-				lineNumOfFirstFile, _ = strconv.Atoi(tokens[1])
+			path := tokens[0]
+			lineNum, _ := strconv.Atoi(tokens[1])
+
+			// Remove duplication
+			if ! cmn.Include(paths, path) {
+				paths = append(paths, path)
+
+				if lineNumOfFirstFile < 0 {
+					lineNumOfFirstFile = lineNum
+				}
 			}
 		}
 	} else {
-		paths = append(paths, lines...)
+		for _, path := range lines {
+			// Remove duplication
+			if ! cmn.Include(paths, path) {
+				paths = append(paths, path)
+			}
+		}
 	}
-
-	// TODO 重複ファイルパスを除去する
 
 	return paths, lineNumOfFirstFile
 }

@@ -28,10 +28,23 @@ func Map(strings []string, f func(string) string) []string {
 }
 
 func All(strings []string, f func(string) bool) bool {
-	for _, v := range strings {
-		if !f(v) {
+	for _, str := range strings {
+		if !f(str) {
 			return false
 		}
 	}
 	return true
+}
+
+func Index(strings []string, target string) int {
+	for i, str := range strings {
+		if str == target {
+			return i
+		}
+	}
+	return -1
+}
+
+func Include(strings []string, target string) bool {
+	return Index(strings, target) >= 0
 }
