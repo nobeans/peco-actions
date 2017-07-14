@@ -7,6 +7,8 @@ import (
 	"strings"
 	"regexp"
 	"strconv"
+	"os/exec"
+	"fmt"
 )
 
 type (
@@ -28,8 +30,7 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 
 	items := []menuItem{}
 
-	// Without directories
-	// TODO only text!!!!
+	// If all are text files
 	if allFiles(paths) {
 		log.Printf("All file exist and aren't directory: %#v", paths)
 		items = append(items, menuItem{Label: "Edit", Action: editorCommandLine(quotedPaths, lineNumOfFirstFile)})
@@ -66,7 +67,7 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 
 func linesToPaths(lines []string) ([]string, int) {
 	// Support "path:lineNum:lineString" as grep result (lineString is ignored)
-	paths := make([]string, len(lines))
+	paths := make([]string, 0)
 	lineNumOfFirstFile := -1
 	if len(paths) > 0 && isGrepFormat(lines[0]) {
 		for i, line := range lines {
@@ -133,7 +134,14 @@ func quoteIfRequired(paths []string) []string {
 
 func allFiles(paths []string) bool {
 	return cmn.All(paths, func(path string) bool {
-		// TODO want to detect it's a TEXT file or not
-		return cmn.ExistFile(path) && !cmn.IsDirectory(path)
+		if cmn.CommandExists("file") {
+			out, err := exec.Command("file", path).Output()
+			if err != nil {
+				return false
+			}
+			return regexp.MustCompile("\\btext\\b").MatchString(strings.TrimSpace(fmt.Sprintf("%s", out)))
+		} else {
+			return cmn.ExistFile(path) && !cmn.IsDirectory(path)
+		}
 	})
 }
