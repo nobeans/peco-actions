@@ -31,15 +31,10 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 	items := []menuItem{}
 
 	// If all are text files
-	if allFiles(paths) {
+	if allTextFiles(paths) {
 		log.Printf("All file exist and aren't directory: %#v", paths)
 		items = append(items, menuItem{Label: "Edit", Action: editorCommandLine(quotedPaths, lineNumOfFirstFile)})
 		items = append(items, menuItem{Label: "Show text", Action: "cat " + quotedPaths})
-	}
-
-	// Only if cwd in git repository and tig exists
-	if cmn.CommandExists("tig") && cmn.InGitRepository() {
-		items = append(items, menuItem{Label: "Tig", Action: "tig " + quotedPaths})
 	}
 
 	// Only for single target
@@ -52,6 +47,11 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 				items = append(items, menuItem{Label: "Go to parent", Action: "cd " + parentDir})
 			}
 		}
+	}
+
+	// If all are in git repository and tig exists
+	if cmn.CommandExists("tig") && allInsideGitRepository(paths) {
+		items = append(items, menuItem{Label: "Tig", Action: "tig " + quotedPaths})
 	}
 
 	// Common
@@ -144,7 +144,7 @@ func quoteIfRequired(paths []string) []string {
 	})
 }
 
-func allFiles(paths []string) bool {
+func allTextFiles(paths []string) bool {
 	return cmn.All(paths, func(path string) bool {
 		if cmn.CommandExists("file") {
 			out, err := exec.Command("file", path).Output()
@@ -155,5 +155,11 @@ func allFiles(paths []string) bool {
 		} else {
 			return cmn.ExistFile(path) && !cmn.IsDirectory(path)
 		}
+	})
+}
+
+func allInsideGitRepository(paths []string) bool {
+	return cmn.All(paths, func(path string) bool {
+		return cmn.InGitRepository(path) && !cmn.GitRepositoryRoot(path)
 	})
 }
