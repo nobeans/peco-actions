@@ -34,6 +34,11 @@ func (FileActionType) menuItems(rawPaths []string) ([]menuItem, error) {
 		}...)
 	}
 
+	// Only if cwd in git repository and tig exists
+	if cmn.CommandExists("tig") && cmn.InGitRepository() {
+		items = append(items, menuItem{Label: "Tig", Action: "tig " + quotedPaths})
+	}
+
 	// Only for single target
 	if len(rawPaths) == 1 {
 		if cmn.ExistFile(rawPaths[0]) {
