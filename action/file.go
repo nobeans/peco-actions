@@ -68,7 +68,7 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 func linesToPaths(lines []string) ([]string, int) {
 	// Support "path:lineNum:lineString" as grep result (lineString is ignored)
 
-	paths := make([]string, 0)
+	paths := []string{}
 	lineNumOfFirstFile := -1
 
 	if len(lines) > 0 && isGrepFormat(lines[0]) {
@@ -103,7 +103,7 @@ func isGrepFormat(line string) bool {
 }
 
 func editorCommandLine(path string, lineNum int) string {
-	cl := make([]string, 0)
+	cl := []string{}
 
 	cmd := cmn.Env("EDITOR", "vi")
 	cl = append(cl, cmd)

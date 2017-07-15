@@ -61,7 +61,7 @@ func renderMenuItems(actionType ActionType, lines []string) ([]menuItem, error) 
 	// e.g. export PECO_ACTIONS__ADHOC_MENU="A=B;C=D"
 	adhocMenu := cmn.Env("PECO_ACTIONS__ADHOC_MENU", "")
 	if len(adhocMenu) > 0 {
-		adhocItems := make([]menuItem, 0)
+		adhocItems := []menuItem{}
 		for _, adhocLine := range strings.Split(adhocMenu, ";") {
 			tokens := cmn.Map(strings.SplitN(adhocLine, "=", 2), strings.TrimSpace)
 			adhocItems = append(adhocItems, menuItem{
