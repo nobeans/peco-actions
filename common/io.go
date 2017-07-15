@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func ReadLines(r io.Reader) ([]string, error) {
@@ -28,7 +29,10 @@ func ExistFile(path string) bool {
 }
 
 func IsDirectory(path string) bool {
-	fInfo, _ := os.Stat(path)
+	fInfo, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
 	return fInfo.IsDir()
 }
 
@@ -47,4 +51,25 @@ func ExpandPath(path string) string {
 	}
 
 	return expanded
+}
+
+func InDir(dir string, target string) bool {
+	if !IsDirectory(dir) {
+		log.Printf("Not directory: %s", dir)
+		return false
+	}
+
+	absDir, err := filepath.Abs(dir)
+	if err != nil {
+		log.Printf("Failed to filepath.Abs(dir): %s (because %s)", target, err.Error())
+		return false
+	}
+
+	absTarget, err := filepath.Abs(target)
+	if err != nil {
+		log.Printf("Failed to filepath.Abs(target): %s (because %s)", target, err.Error())
+		return false
+	}
+
+	return strings.HasPrefix(absTarget, absDir+"/")
 }

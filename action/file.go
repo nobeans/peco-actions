@@ -4,6 +4,7 @@ import (
 	"fmt"
 	cmn "github.com/nobeans/peco-actions/common"
 	"log"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -50,7 +51,7 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 	}
 
 	// If all are in git repository and tig exists
-	if cmn.CommandExists("tig") && allInsideGitRepository(paths) {
+	if cmn.CommandExists("tig") && cmn.CwdInGitRepository() && allInCwd(paths) {
 		items = append(items, menuItem{Label: "Tig", Action: "tig " + quotedPaths})
 	}
 
@@ -158,8 +159,15 @@ func allTextFiles(paths []string) bool {
 	})
 }
 
-func allInsideGitRepository(paths []string) bool {
+func allInCwd(paths []string) bool {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return false
+	}
+
 	return cmn.All(paths, func(path string) bool {
-		return cmn.InGitRepository(path) && !cmn.GitRepositoryRoot(path)
+		inDir := cmn.InDir(cwd, path)
+		log.Printf("allInCwd: cwd=%s, path=%s, inDir=%v", cwd, path, inDir)
+		return inDir
 	})
 }
