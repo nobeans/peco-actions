@@ -10,7 +10,7 @@ VERSION = 1.0.0
 # Fixed
 RM = rm -rf
 GOCMD = go
-SRCDIR = ./cmd
+SRCDIR = ./
 DESTDIR = .
 LDFLAGS = -X=main.Version=$(VERSION)
 
