@@ -15,9 +15,7 @@ This command provides the features:
 ## Installation
 
 ```
-$ go get github.com/mattn/go-shellwords
-$ make
-$ cp peco-actions /usr/local/bin
+$ go get github.com/nobeans/peco-actions
 ```
 
 
