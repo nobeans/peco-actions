@@ -5,7 +5,7 @@
 # Specified from caller
 OS_ARCH = local
 EXT =
-VERSION = 1.0.0-SNAPSHOT
+VERSION = 1.0.0
 
 # Fixed
 RM = rm -rf
