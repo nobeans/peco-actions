@@ -40,7 +40,7 @@ options:
 ### zsh
 
 ```sh
-__peco_actions__run_action() {
+eval_peco_action() {
     local action="$*"
     if [ -n "$action" ]; then
         echo "$fg_bold[yellow]>> $fg_bold[cyan]$action$reset_color" >&2
@@ -56,6 +56,34 @@ __peco_actions__run_action() {
 ```
 
 ```sh
-$ __peco_actions__run_action $(ls -1 | peco-actions --file)
-$ __peco_actions__run_action $(ps | peco | awk '{ print $1 }' | peco-actions --process)
+$ eval_peco_action $(ls -1 | peco-actions --file)
+$ eval_peco_action $(ps | peco | awk '{ print $1 }' | peco-actions --process)
 ```
+
+
+### fish
+
+```sh
+function eval_peco_action
+    set -l action "$argv"
+    [ -z "$action" ]; and return
+
+    set_color yellow
+    echo -n ">> " >&2
+    set_color cyan
+    echo "$action" >&2
+    set_color white
+
+    # Add command history
+    fish_add_history "$action"
+
+    # Run by eval to handle arguments including spaces correctly
+    eval $action
+end
+```
+
+```sh
+$ eval_peco_action (ls -1 | peco-actions --file)
+$ eval_peco_action (ps | peco | awk '{ print $1 }' | peco-actions --process)
+```
+
