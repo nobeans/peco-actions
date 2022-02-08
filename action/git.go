@@ -2,9 +2,10 @@ package action
 
 import (
 	"errors"
-	cmn "github.com/nobeans/peco-actions/common"
 	"log"
 	"strings"
+
+	cmn "github.com/nobeans/peco-actions/common"
 )
 
 type (

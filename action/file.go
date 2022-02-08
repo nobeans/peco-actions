@@ -2,7 +2,6 @@ package action
 
 import (
 	"fmt"
-	cmn "github.com/nobeans/peco-actions/common"
 	"log"
 	"os"
 	"os/exec"
@@ -10,6 +9,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	cmn "github.com/nobeans/peco-actions/common"
 )
 
 type (

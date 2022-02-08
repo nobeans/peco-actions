@@ -3,14 +3,15 @@ package action
 import (
 	"errors"
 	"fmt"
-	shellwords "github.com/mattn/go-shellwords"
-	cmn "github.com/nobeans/peco-actions/common"
 	"io"
 	"log"
 	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
+
+	shellwords "github.com/mattn/go-shellwords"
+	cmn "github.com/nobeans/peco-actions/common"
 )
 
 type (
