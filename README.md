@@ -15,7 +15,7 @@ This command provides the features:
 ## Installation
 
 ```
-$ go get github.com/nobeans/peco-actions
+$ go install github.com/nobeans/peco-actions@latest
 ```
 
 
