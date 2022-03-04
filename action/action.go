@@ -78,11 +78,11 @@ func renderMenuItems(actionType Type, lines []string) ([]menuItem, error) {
 func selectSingleActionByPeco(menuItems []menuItem, pecoPrompt string) (string, error) {
 	cmd := exec.Command(cmn.Env("PECO_ACTIONS__COMMAND", "peco"), "--prompt", pecoPrompt)
 
-	// You can specify peco options via environment variable PECO_ACTIONS__PECO_OPTS
-	// e.g. export PECO_ACTIONS__PECO_OPTS="--layout bottom-up"
-	pecoOpts := cmn.Env("PECO_ACTIONS__PECO_OPTS", "")
-	if len(pecoOpts) > 0 {
-		parsedOpts, err := shellwords.Parse(pecoOpts)
+	// You can specify command options via environment variable PECO_ACTIONS__COMMAND_OPTS
+	// e.g. export PECO_ACTIONS__COMMAND_OPTS="--layout bottom-up"
+	opts := cmn.Env("PECO_ACTIONS__COMMAND_OPTS", "")
+	if len(opts) > 0 {
+		parsedOpts, err := shellwords.Parse(opts)
 		if err != nil {
 			return "", err
 		}
