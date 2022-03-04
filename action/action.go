@@ -76,7 +76,7 @@ func renderMenuItems(actionType Type, lines []string) ([]menuItem, error) {
 }
 
 func selectSingleActionByPeco(menuItems []menuItem, pecoPrompt string) (string, error) {
-	cmd := exec.Command("peco", "--prompt", pecoPrompt)
+	cmd := exec.Command(cmn.Env("PECO_ACTIONS__COMMAND", "peco"), "--prompt", pecoPrompt)
 
 	// You can specify peco options via environment variable PECO_ACTIONS__PECO_OPTS
 	// e.g. export PECO_ACTIONS__PECO_OPTS="--layout bottom-up"
