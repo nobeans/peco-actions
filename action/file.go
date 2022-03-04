@@ -119,7 +119,7 @@ func editorCommandLine(path string, lineNum int) string {
 		}
 
 		// Highlight in vim
-		pattern := cmn.Env("PECO_ACTIONS_EDITOR_PATTERN", "")
+		pattern := cmn.Env("PECO_ACTIONS__EDITOR_PATTERN", "")
 		if len(pattern) > 0 {
 			cl = append(cl, "+/\"\\c"+pattern+"\"")
 		}
