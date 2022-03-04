@@ -2,9 +2,9 @@ package action
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"log"
+	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -78,6 +78,9 @@ func renderMenuItems(actionType Type, lines []string) ([]menuItem, error) {
 func selectSingleActionByPeco(menuItems []menuItem, pecoPrompt string) (string, error) {
 	cmd := exec.Command(cmn.Env("PECO_ACTIONS__COMMAND", "peco"), "--prompt", pecoPrompt)
 
+	// This required supporting for fzf.
+	cmd.Stderr = os.Stderr
+
 	// You can specify command options via environment variable PECO_ACTIONS__COMMAND_OPTS
 	// e.g. export PECO_ACTIONS__COMMAND_OPTS="--layout bottom-up"
 	opts := cmn.Env("PECO_ACTIONS__COMMAND_OPTS", "")
@@ -95,9 +98,10 @@ func selectSingleActionByPeco(menuItems []menuItem, pecoPrompt string) (string, 
 	_, _ = io.WriteString(stdin, formatMenu(menuItems))
 	_ = stdin.Close()
 	out, _ := cmd.Output()
+	log.Printf("Command output: %s", out)
 
 	// Parse an action part from a menu line
-	act := strings.TrimSpace(regexp.MustCompile("(?m)^.*> ").ReplaceAllLiteralString(fmt.Sprintf("%s", out), ""))
+	act := strings.TrimSpace(regexp.MustCompile("(?m)^.*> ").ReplaceAllLiteralString(string(out), ""))
 	log.Printf("Selected action: %s", strconv.Quote(act))
 
 	// Check if it's a single line
