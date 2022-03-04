@@ -6,9 +6,7 @@ import (
 	"strings"
 )
 
-type (
-	ProcessActionType struct{}
-)
+type ProcessActionType struct{}
 
 func (ProcessActionType) prompt() string {
 	return "process-actions>"

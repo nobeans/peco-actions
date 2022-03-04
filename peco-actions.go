@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	act "github.com/nobeans/peco-actions/action"
-	cmn "github.com/nobeans/peco-actions/common"
 	"log"
 	"os"
+
+	"github.com/nobeans/peco-actions/action"
+	"github.com/nobeans/peco-actions/common"
 )
 
 const (
@@ -18,7 +19,7 @@ options:
   --process     actions for a process id
   --server      actions for a host/IP-address
   --git         actions for a commit id
-  --generic     actions for generic only using addhoc menu`
+  --generic     actions for generic only using adhoc menu`
 )
 
 var (
@@ -51,7 +52,7 @@ func newOptions() *Options {
 	}
 }
 
-func parseOptions(args cmn.Args) *Options {
+func parseOptions(args common.Args) *Options {
 	opts := newOptions()
 	for i := 1; i < len(args); i++ {
 		arg := args[i]
@@ -79,31 +80,31 @@ func parseOptions(args cmn.Args) *Options {
 	return opts
 }
 
-func actionType(opts *Options) act.ActionType {
+func actionType(opts *Options) action.Type {
 	switch {
 	case opts.file:
-		return new(act.FileActionType)
+		return new(action.FileActionType)
 	case opts.process:
-		return new(act.ProcessActionType)
+		return new(action.ProcessActionType)
 	case opts.server:
-		return new(act.ServerActionType)
+		return new(action.ServerActionType)
 	case opts.git:
-		return new(act.GitActionType)
+		return new(action.GitActionType)
 	case opts.generic:
-		return new(act.GenericActionType)
+		return new(action.GenericActionType)
 	default:
 		panic("no action type\n" + USAGE)
 	}
 }
 
 func main() {
-	defer cmn.ExitIfPanic()
+	defer common.ExitIfPanic()
 
 	// Parsing options
 	opts := parseOptions(os.Args)
 
 	// Setting log level (all logging must be after this line)
-	cmn.SetupGlobalLogger(!opts.debug)
+	common.SetupGlobalLogger(!opts.debug)
 
 	log.Printf("Original arguments: %#v", os.Args)
 	log.Printf("Parsed options: %#v", opts) // must be after affecting -debug option
@@ -117,11 +118,11 @@ func main() {
 		os.Exit(0)
 	}
 
-	action, err := act.ResolveAction(actionType(opts), os.Stdin)
+	act, err := action.Resolve(actionType(opts), os.Stdin)
 	if err != nil {
 		panic(fmt.Sprintf("%s", err.Error()))
 	}
-	fmt.Printf("%s", action)
+	fmt.Printf("%s", act)
 
 	os.Exit(0)
 }

@@ -8,10 +8,8 @@ EXT =
 VERSION = 1.0.0
 
 # Fixed
-RM = rm -rf
+RM = rm -f
 GOCMD = go
-SRCDIR = ./
-DESTDIR = .
 LDFLAGS = -X=main.Version=$(VERSION)
 
 
@@ -23,10 +21,10 @@ LDFLAGS = -X=main.Version=$(VERSION)
 
 all: clean peco-actions
 
-peco-actions: ${SRCDIR}/peco-actions.go
+peco-actions: peco-actions.go
 	$(GOCMD) build --ldflags "$(LDFLAGS)" $<
 
 
 clean:
-	$(RM) $(DESTDIR)/peco-actions
+	$(RM) peco-actions
 

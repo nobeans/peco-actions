@@ -6,9 +6,7 @@ import (
 	"strings"
 )
 
-type (
-	ServerActionType struct{}
-)
+type ServerActionType struct{}
 
 func (ServerActionType) prompt() string {
 	return "server-actions>"

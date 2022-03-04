@@ -10,7 +10,7 @@ import (
 )
 
 func ReadLines(r io.Reader) ([]string, error) {
-	lines := []string{}
+	var lines []string
 	s := bufio.NewScanner(r)
 	for s.Scan() {
 		text := s.Text()

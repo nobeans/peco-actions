@@ -25,7 +25,7 @@ func CommandExists(name string) bool {
 
 func ExitIfPanic() {
 	if r := recover(); r != nil {
-		fmt.Fprintf(os.Stderr, "ERROR: %s\n", r)
+		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\n", r)
 		os.Exit(1)
 	}
 }

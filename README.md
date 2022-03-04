@@ -33,7 +33,7 @@ options:
   --process     actions for a process id
   --server      actions for a host/IP-address
   --git         actions for a commit id
-  --generic     actions for generic only using addhoc menu
+  --generic     actions for generic only using adhoc menu
 ```
 
 

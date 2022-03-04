@@ -1,7 +1,7 @@
 package action
 
 import (
-	cmn "github.com/nobeans/peco-actions/common"
+	"github.com/nobeans/peco-actions/common"
 )
 
 type (
@@ -9,7 +9,7 @@ type (
 )
 
 func (GenericActionType) prompt() string {
-	return cmn.Env("PECO_ACTIONS__PROMPT", "generic-actions>")
+	return common.Env("PECO_ACTIONS__PROMPT", "generic-actions>")
 }
 
 func (GenericActionType) menuItems(_ []string) ([]menuItem, error) {

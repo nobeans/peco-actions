@@ -14,19 +14,17 @@ import (
 	cmn "github.com/nobeans/peco-actions/common"
 )
 
-type (
-	ActionType interface {
-		menuItems(lines []string) ([]menuItem, error)
-		prompt() string
-	}
+type Type interface {
+	menuItems(lines []string) ([]menuItem, error)
+	prompt() string
+}
 
-	menuItem struct {
-		Label  string
-		Action string
-	}
-)
+type menuItem struct {
+	Label  string
+	Action string
+}
 
-func ResolveAction(actionType ActionType, r io.Reader) (string, error) {
+func Resolve(actionType Type, r io.Reader) (string, error) {
 	lines, err := cmn.ReadLines(r)
 	if err != nil {
 		return "", err
@@ -42,27 +40,27 @@ func ResolveAction(actionType ActionType, r io.Reader) (string, error) {
 	}
 	log.Printf("Menu items: %#v", menuItems)
 
-	action, err := selectSingleActionByPeco(menuItems, actionType.prompt())
+	act, err := selectSingleActionByPeco(menuItems, actionType.prompt())
 	if err != nil {
 		return "", err
 	}
-	log.Printf("Resolved action: %#v", action)
+	log.Printf("Resolved action: %#v", act)
 
-	return action, nil
+	return act, nil
 }
 
-func renderMenuItems(actionType ActionType, lines []string) ([]menuItem, error) {
-	menuItems, err := actionType.menuItems(lines)
+func renderMenuItems(actionType Type, lines []string) ([]menuItem, error) {
+	items, err := actionType.menuItems(lines)
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("Menu items: %#v", menuItems)
+	log.Printf("Menu items: %#v", items)
 
 	// You can specify adhoc menu items via environment variable PECO_ACTIONS__ADHOC_MENU
 	// e.g. export PECO_ACTIONS__ADHOC_MENU="A=B;C=D"
 	adhocMenu := cmn.Env("PECO_ACTIONS__ADHOC_MENU", "")
 	if len(adhocMenu) > 0 {
-		adhocItems := []menuItem{}
+		var adhocItems []menuItem
 		for _, adhocLine := range strings.Split(adhocMenu, ";") {
 			tokens := cmn.Map(strings.SplitN(adhocLine, "=", 2), strings.TrimSpace)
 			adhocItems = append(adhocItems, menuItem{
@@ -70,11 +68,11 @@ func renderMenuItems(actionType ActionType, lines []string) ([]menuItem, error) 
 				Action: tokens[1],
 			})
 		}
-		menuItems = append(adhocItems, menuItems...) // append to top
-		log.Printf("Menu items (applied adhoc): %#v", menuItems)
+		items = append(adhocItems, items...) // append to top
+		log.Printf("Menu items (applied adhoc): %#v", items)
 	}
 
-	return menuItems, nil
+	return items, nil
 }
 
 func selectSingleActionByPeco(menuItems []menuItem, pecoPrompt string) (string, error) {
@@ -94,20 +92,20 @@ func selectSingleActionByPeco(menuItems []menuItem, pecoPrompt string) (string, 
 	}
 
 	stdin, _ := cmd.StdinPipe()
-	io.WriteString(stdin, formatMenu(menuItems))
-	stdin.Close()
+	_, _ = io.WriteString(stdin, formatMenu(menuItems))
+	_ = stdin.Close()
 	out, _ := cmd.Output()
 
 	// Parse an action part from a menu line
-	action := strings.TrimSpace(regexp.MustCompile("(?m)^.*> ").ReplaceAllLiteralString(fmt.Sprintf("%s", out), ""))
-	log.Printf("Selected action: %s", strconv.Quote(action))
+	act := strings.TrimSpace(regexp.MustCompile("(?m)^.*> ").ReplaceAllLiteralString(fmt.Sprintf("%s", out), ""))
+	log.Printf("Selected action: %s", strconv.Quote(act))
 
 	// Check if it's a single line
-	if strings.Contains(action, "\n") {
+	if strings.Contains(act, "\n") {
 		return "", errors.New("could not select multiple actions")
 	}
 
-	return action, nil
+	return act, nil
 }
 
 func formatMenu(menuItems []menuItem) string {
@@ -118,7 +116,7 @@ func formatMenu(menuItems []menuItem) string {
 		}
 	}
 
-	menuLines := []string{}
+	var menuLines []string
 	for _, item := range menuItems {
 		menuLines = append(menuLines, cmn.PadLeft(item.Label+" ", maxLabelLen+10, ".")+" > "+item.Action)
 	}

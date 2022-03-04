@@ -10,12 +10,10 @@ import (
 	"strconv"
 	"strings"
 
-	cmn "github.com/nobeans/peco-actions/common"
+	"github.com/nobeans/peco-actions/common"
 )
 
-type (
-	FileActionType struct{}
-)
+type FileActionType struct{}
 
 func (FileActionType) prompt() string {
 	return "file-actions>"
@@ -30,7 +28,7 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 	expandedQuotedPaths := strings.TrimSpace(strings.Join(quoteIfRequired(expandAllPaths(paths)), " "))
 	log.Printf("expandedQuotedPaths: %s", expandedQuotedPaths)
 
-	items := []menuItem{}
+	var items []menuItem
 
 	// If all are text files
 	if allTextFiles(paths) {
@@ -41,8 +39,8 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 
 	// Only for single target
 	if len(paths) == 1 {
-		if cmn.ExistFile(paths[0]) {
-			if cmn.IsDirectory(paths[0]) {
+		if common.ExistFile(paths[0]) {
+			if common.IsDirectory(paths[0]) {
 				items = append(items, menuItem{Label: "Go into", Action: "cd " + quotedPaths})
 			} else {
 				parentDir := filepath.Dir(paths[0])
@@ -52,7 +50,7 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 	}
 
 	// If all are in git repository and tig exists
-	if cmn.CommandExists("tig") && cmn.CwdInGitRepository() && allInCwd(paths) {
+	if common.CommandExists("tig") && common.CwdInGitRepository() && allInCwd(paths) {
 		items = append(items, menuItem{Label: "Tig", Action: "tig " + quotedPaths})
 	}
 
@@ -70,7 +68,7 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 func linesToPaths(lines []string) ([]string, int) {
 	// Support "path:lineNum:lineString" as grep result (lineString is ignored)
 
-	paths := []string{}
+	var paths []string
 	lineNumOfFirstFile := -1
 
 	if len(lines) > 0 && isGrepFormat(lines[0]) {
@@ -80,7 +78,7 @@ func linesToPaths(lines []string) ([]string, int) {
 			lineNum, _ := strconv.Atoi(tokens[1])
 
 			// Remove duplication
-			if !cmn.Include(paths, path) {
+			if !common.Include(paths, path) {
 				paths = append(paths, path)
 
 				if lineNumOfFirstFile < 0 {
@@ -91,7 +89,7 @@ func linesToPaths(lines []string) ([]string, int) {
 	} else {
 		for _, path := range lines {
 			// Remove duplication
-			if !cmn.Include(paths, path) {
+			if !common.Include(paths, path) {
 				paths = append(paths, path)
 			}
 		}
@@ -105,9 +103,9 @@ func isGrepFormat(line string) bool {
 }
 
 func editorCommandLine(path string, lineNum int) string {
-	cl := []string{}
+	var cl []string
 
-	cmd := cmn.Env("EDITOR", "vi")
+	cmd := common.Env("EDITOR", "vi")
 	cl = append(cl, cmd)
 
 	// only for vim
@@ -119,7 +117,7 @@ func editorCommandLine(path string, lineNum int) string {
 		}
 
 		// Highlight in vim
-		pattern := cmn.Env("PECO_ACTIONS__EDITOR_PATTERN", "")
+		pattern := common.Env("PECO_ACTIONS__EDITOR_PATTERN", "")
 		if len(pattern) > 0 {
 			cl = append(cl, "+/\"\\c"+pattern+"\"")
 		}
@@ -131,13 +129,13 @@ func editorCommandLine(path string, lineNum int) string {
 }
 
 func expandAllPaths(paths []string) []string {
-	return cmn.Map(paths, func(path string) string {
-		return cmn.ExpandPath(path)
+	return common.Map(paths, func(path string) string {
+		return common.ExpandPath(path)
 	})
 }
 
 func quoteIfRequired(paths []string) []string {
-	return cmn.Map(paths, func(path string) string {
+	return common.Map(paths, func(path string) string {
 		if strings.Contains(path, " ") {
 			// only if the path has spaces
 			return "\"" + path + "\""
@@ -147,15 +145,15 @@ func quoteIfRequired(paths []string) []string {
 }
 
 func allTextFiles(paths []string) bool {
-	return cmn.All(paths, func(path string) bool {
-		if cmn.CommandExists("file") {
+	return common.All(paths, func(path string) bool {
+		if common.CommandExists("file") {
 			out, err := exec.Command("file", path).Output()
 			if err != nil {
 				return false
 			}
 			return regexp.MustCompile("\\btext\\b").MatchString(strings.TrimSpace(fmt.Sprintf("%s", out)))
 		} else {
-			return cmn.ExistFile(path) && !cmn.IsDirectory(path)
+			return common.ExistFile(path) && !common.IsDirectory(path)
 		}
 	})
 }
@@ -166,8 +164,8 @@ func allInCwd(paths []string) bool {
 		return false
 	}
 
-	return cmn.All(paths, func(path string) bool {
-		inDir := cmn.InDir(cwd, path)
+	return common.All(paths, func(path string) bool {
+		inDir := common.InDir(cwd, path)
 		log.Printf("allInCwd: cwd=%s, path=%s, inDir=%v", cwd, path, inDir)
 		return inDir
 	})
