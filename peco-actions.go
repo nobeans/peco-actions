@@ -23,7 +23,7 @@ options:
 )
 
 var (
-	Version = "X.X.X-SNAPSHOT" // replaced by ldflags
+	Version = "1.1.0"
 )
 
 type (
