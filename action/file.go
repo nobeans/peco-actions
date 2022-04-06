@@ -151,7 +151,7 @@ func allTextFiles(paths []string) bool {
 			if err != nil {
 				return false
 			}
-			return regexp.MustCompile("\\btext\\b").MatchString(strings.TrimSpace(fmt.Sprintf("%s", out)))
+			return regexp.MustCompile("\\b(text|JSON data)\\b").MatchString(strings.TrimSpace(fmt.Sprintf("%s", out)))
 		} else {
 			return common.ExistFile(path) && !common.IsDirectory(path)
 		}
