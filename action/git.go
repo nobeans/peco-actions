@@ -23,7 +23,7 @@ func (GitActionType) menuItems(commitIds []string) ([]menuItem, error) {
 	log.Printf("Commit ID: %s", commitId)
 
 	items := []menuItem{
-		{Label: "Checkout", Action: "git checkout " + strings.ReplaceAll(commitId, "remotes/origin/", "")},
+		{Label: "Switch", Action: "git switch " + strings.ReplaceAll(commitId, "remotes/origin/", "")},
 	}
 	if common.CommandExists("tig") {
 		items = append(items, menuItem{Label: "Tig", Action: "tig " + commitId})
