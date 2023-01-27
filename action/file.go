@@ -54,22 +54,22 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 		items = append(items, menuItem{Label: "Tig", Action: "tig " + quotedPaths})
 	}
 
-	// IDE
 	if common.CommandExists("idea") {
 		items = append(items, menuItem{Label: "Open (IntelliJ IDEA)", Action: "idea " + quotedPaths})
 	}
 	if common.CommandExists("code") {
 		items = append(items, menuItem{Label: "Open (Visual Studio Code)", Action: "code " + quotedPaths})
 	}
-
-	// Common
+	if common.CommandExists("open") {
+		items = append(items, menuItem{Label: "Open (default)", Action: "open " + quotedPaths})
+	}
 	items = append(items, []menuItem{
-		{Label: "Open (default)", Action: "open " + quotedPaths},
 		{Label: "Show list", Action: "ls -al " + quotedPaths},
 		{Label: "Show file type", Action: "file " + quotedPaths},
-		{Label: "Copy to Clipboard", Action: "echo -n '" + expandedQuotedPaths + "' | pbcopy"},
 	}...)
-
+	if common.CommandExists("pbcopy") {
+		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n '" + expandedQuotedPaths + "' | pbcopy"})
+	}
 	return items, nil
 }
 

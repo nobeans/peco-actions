@@ -4,6 +4,8 @@ import (
 	"errors"
 	"log"
 	"strings"
+
+	"github.com/nobeans/peco-actions/common"
 )
 
 type ServerActionType struct{}
@@ -20,10 +22,21 @@ func (ServerActionType) menuItems(hosts []string) ([]menuItem, error) {
 	host := strings.TrimSpace(strings.Join(hosts, " "))
 	log.Printf("Host: %s", host)
 
-	return []menuItem{
-		{Label: "Ssh", Action: "ssh " + host},
-		{Label: "Ping", Action: "ping " + host},
-		{Label: "Traceroute", Action: "traceroute " + host},
-		{Label: "Copy IP address to Clipboard", Action: "ping -c 1 " + host + " | grep PING | sed -E 's/.*\\((.*)\\):.*/\\\\1/' | pbcopy"},
-	}, nil
+	var items = []menuItem{}
+	if common.CommandExists("ssh") {
+		items = append(items, menuItem{Label: "Ssh", Action: "ssh " + host})
+	}
+	if common.CommandExists("ping") {
+		items = append(items, menuItem{Label: "Ping", Action: "ping " + host})
+	}
+	if common.CommandExists("traceroute") {
+		items = append(items, menuItem{Label: "Traceroute", Action: "traceroute " + host})
+	}
+	if common.CommandExists("tracert") {
+		items = append(items, menuItem{Label: "Traceroute", Action: "tracert " + host})
+	}
+	if common.CommandExists("pbcopy") {
+		items = append(items, menuItem{Label: "Copy IP address to Clipboard", Action: "ping -c 1 " + host + " | grep PING | sed -E 's/.*\\((.*)\\):.*/\\\\1/' | pbcopy"})
+	}
+	return items, nil
 }

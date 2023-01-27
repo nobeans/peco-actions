@@ -28,10 +28,9 @@ func (GitActionType) menuItems(commitIds []string) ([]menuItem, error) {
 	if common.CommandExists("tig") {
 		items = append(items, menuItem{Label: "Tig", Action: "tig " + commitId})
 	}
-	items = append(items, []menuItem{
-		{Label: "Delete (safely)", Action: "git branch -d " + commitId},
-		{Label: "Copy to Clipboard", Action: "echo -n " + commitId + " | pbcopy"},
-	}...)
-
+	items = append(items, menuItem{Label: "Delete (safely)", Action: "git branch -d " + commitId})
+	if common.CommandExists("pbcopy") {
+		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + commitId + " | pbcopy"})
+	}
 	return items, nil
 }
