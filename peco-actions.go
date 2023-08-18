@@ -12,14 +12,16 @@ import (
 const (
 	USAGE = `usage: peco-actions [option]
 options:
-  -h,--help     show this usage
-  -v,--version  display the version
-  -D,--debug    display the version
-  --file        actions for file path(s)
-  --process     actions for a process id
-  --server      actions for a host/IP-address
-  --git         actions for a commit id
-  --generic     actions for generic only using adhoc menu`
+  -h,--help             show this usage
+  -v,--version          display the version
+  -D,--debug            display the version
+  --file                actions for file path(s)
+  --process             actions for a process id
+  --server              actions for a host/IP-address
+  --git                 actions for a commit id
+  --docker-container    actions for a docker container
+  --docker-image        actions for a docker image
+  --generic             actions for generic only using adhoc menu`
 )
 
 var (
@@ -28,27 +30,31 @@ var (
 
 type (
 	Options struct {
-		help    bool
-		version bool
-		debug   bool
-		file    bool
-		process bool
-		server  bool
-		git     bool
-		generic bool
+		help            bool
+		version         bool
+		debug           bool
+		file            bool
+		process         bool
+		server          bool
+		git             bool
+		dockerContainer bool
+		dockerImage     bool
+		generic         bool
 	}
 )
 
 func newOptions() *Options {
 	return &Options{
-		help:    false,
-		version: false,
-		debug:   false,
-		file:    false,
-		process: false,
-		server:  false,
-		git:     false,
-		generic: false,
+		help:            false,
+		version:         false,
+		debug:           false,
+		file:            false,
+		process:         false,
+		server:          false,
+		git:             false,
+		dockerContainer: false,
+		dockerImage:     false,
+		generic:         false,
 	}
 }
 
@@ -71,6 +77,10 @@ func parseOptions(args common.Args) *Options {
 			opts.server = true
 		case "--git":
 			opts.git = true
+		case "--docker-container":
+			opts.dockerContainer = true
+		case "--docker-image":
+			opts.dockerImage = true
 		case "--generic":
 			opts.generic = true
 		default:
@@ -90,6 +100,10 @@ func actionType(opts *Options) action.Type {
 		return new(action.ServerActionType)
 	case opts.git:
 		return new(action.GitActionType)
+	case opts.dockerContainer:
+		return new(action.DockerContainerActionType)
+	case opts.dockerImage:
+		return new(action.DockerImageActionType)
 	case opts.generic:
 		return new(action.GenericActionType)
 	default:

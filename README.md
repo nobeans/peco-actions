@@ -26,14 +26,16 @@ $ go install github.com/nobeans/peco-actions@latest
 ```sh
 usage: peco-actions [option]
 options:
-  -h,--help     show this usage
-  -v,--version  display the version
-  -D,--debug    display the version
-  --file        actions for file path(s)
-  --process     actions for a process id
-  --server      actions for a host/IP-address
-  --git         actions for a commit id
-  --generic     actions for generic only using adhoc menu
+  -h,--help             show this usage
+  -v,--version          display the version
+  -D,--debug            display the version
+  --file                actions for file path(s)
+  --process             actions for a process id
+  --server              actions for a host/IP-address
+  --git                 actions for a commit id
+  --docker-container    actions for a docker container
+  --docker-image        actions for a docker image
+  --generic             actions for generic only using adhoc menu
 ```
 
 
