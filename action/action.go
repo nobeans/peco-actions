@@ -76,7 +76,11 @@ func renderMenuItems(actionType Type, lines []string) ([]menuItem, error) {
 }
 
 func selectSingleActionByPeco(menuItems []menuItem, pecoPrompt string) (string, error) {
-	cmd := exec.Command(cmn.Env("PECO_ACTIONS__COMMAND", "peco"), "--prompt", pecoPrompt)
+	cmdName := cmn.Env("PECO_ACTIONS__COMMAND", "peco")
+	if cmdName == "fzf" {
+		pecoPrompt += " "
+	}
+	cmd := exec.Command(cmdName, "--prompt", pecoPrompt)
 
 	// This required supporting for fzf.
 	cmd.Stderr = os.Stderr
