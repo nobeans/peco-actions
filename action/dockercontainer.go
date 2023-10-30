@@ -34,6 +34,7 @@ func (DockerContainerActionType) menuItems(lines []string) ([]menuItem, error) {
 	log.Printf("Container name: %s", containerName)
 
 	items := []menuItem{
+		{Label: "Show logs", Action: "docker logs -f " + containerName},
 		{Label: "Kill", Action: "docker kill " + containerName},
 		{Label: "Exec (sh)", Action: "docker exec -it " + containerName + " sh"},
 		{Label: "Exec (bash)", Action: "docker exec -it " + containerName + " bash"},
