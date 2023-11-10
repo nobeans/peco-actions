@@ -37,6 +37,12 @@ func (DockerImageActionType) menuItems(lines []string) ([]menuItem, error) {
 	items := []menuItem{
 		{Label: "Delete", Action: "docker rmi " + strings.Join(keys, " ")},
 	}
+	if len(keys) == 1 {
+		imageName := keys[0]
+		if common.CommandExists("dld") {
+			items = append(items, menuItem{Label: "Exec (dld shell)", Action: "dld shell " + imageName})
+		}
+	}
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + strings.Join(keys, " ") + " | pbcopy"})
 	}
