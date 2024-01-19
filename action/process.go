@@ -1,7 +1,6 @@
 package action
 
 import (
-	"errors"
 	"log"
 	"strings"
 
@@ -15,10 +14,6 @@ func (ProcessActionType) prompt() string {
 }
 
 func (ProcessActionType) menuItems(pids []string) ([]menuItem, error) {
-	if len(pids) > 1 {
-		return nil, errors.New("target of process-action must be a single line")
-	}
-
 	pid := strings.TrimSpace(strings.Join(pids, " "))
 	log.Printf("PID: %s", pid)
 
