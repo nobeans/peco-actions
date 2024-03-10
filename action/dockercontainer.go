@@ -38,9 +38,7 @@ func (DockerContainerActionType) menuItems(lines []string) ([]menuItem, error) {
 		{Label: "Kill", Action: "docker kill " + containerName},
 		{Label: "Exec (sh)", Action: "docker exec -it " + containerName + " sh"},
 		{Label: "Exec (bash)", Action: "docker exec -it " + containerName + " bash"},
-	}
-	if common.CommandExists("dld") {
-		items = append(items, menuItem{Label: "Exec (dld shell)", Action: "dld shell " + containerName})
+		{Label: "Exec (docker debug)", Action: "docker debug " + containerName},
 	}
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + containerName + " | pbcopy"})

@@ -2,10 +2,11 @@ package action
 
 import (
 	"fmt"
-	"github.com/nobeans/peco-actions/common"
 	"log"
 	"regexp"
 	"strings"
+
+	"github.com/nobeans/peco-actions/common"
 )
 
 type DockerImageActionType struct{}
@@ -39,9 +40,7 @@ func (DockerImageActionType) menuItems(lines []string) ([]menuItem, error) {
 	}
 	if len(keys) == 1 {
 		imageName := keys[0]
-		if common.CommandExists("dld") {
-			items = append(items, menuItem{Label: "Exec (dld shell)", Action: "dld shell " + imageName})
-		}
+		items = append(items, menuItem{Label: "Exec (docker degbug)", Action: "docker debug " + imageName})
 	}
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + strings.Join(keys, " ") + " | pbcopy"})
