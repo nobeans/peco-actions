@@ -31,6 +31,7 @@ options:
   -D,--debug            show debug logs
   --file                actions for file path(s)
   --process             actions for a process id
+  --env                 actions for a environment variable
   --server              actions for a host/IP-address
   --git                 actions for a commit id
   --docker-container    actions for a docker container

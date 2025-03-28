@@ -17,6 +17,7 @@ options:
   -D,--debug            show debug logs
   --file                actions for file path(s)
   --process             actions for a process id
+  --env                 actions for a environment variable
   --server              actions for a host/IP-address
   --git                 actions for a commit id
   --docker-container    actions for a docker container
@@ -36,6 +37,7 @@ type (
 		debug           bool
 		file            bool
 		process         bool
+		env             bool
 		server          bool
 		git             bool
 		dockerContainer bool
@@ -52,6 +54,7 @@ func newOptions() *Options {
 		debug:           false,
 		file:            false,
 		process:         false,
+		env:             false,
 		server:          false,
 		git:             false,
 		dockerContainer: false,
@@ -76,6 +79,8 @@ func parseOptions(args common.Args) *Options {
 			opts.file = true
 		case "--process":
 			opts.process = true
+		case "--env":
+			opts.env = true
 		case "--server":
 			opts.server = true
 		case "--git":
@@ -101,6 +106,8 @@ func actionType(opts *Options) action.Type {
 		return new(action.FileActionType)
 	case opts.process:
 		return new(action.ProcessActionType)
+	case opts.env:
+		return new(action.EnvActionType)
 	case opts.server:
 		return new(action.ServerActionType)
 	case opts.git:
