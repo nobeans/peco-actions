@@ -16,7 +16,7 @@ func (DockerImageActionType) prompt() string {
 }
 
 func (DockerImageActionType) menuItems(lines []string) ([]menuItem, error) {
-	keys := make([]string, 0, len(lines))
+	imageNames := make([]string, 0, len(lines))
 	for i, line := range lines {
 		log.Printf("Input line [%d]: %s", i, line)
 
@@ -32,18 +32,17 @@ func (DockerImageActionType) menuItems(lines []string) ([]menuItem, error) {
 		tag := strings.TrimSpace(tokens[1])
 		log.Printf("Tag [%d]: %s", i, tag)
 
-		keys = append(keys, fmt.Sprintf("%s:%s", imageName, tag))
+		imageNames = append(imageNames, fmt.Sprintf("%s:%s", imageName, tag))
 	}
 
 	items := []menuItem{
-		{Label: "Delete", Action: "docker rmi " + strings.Join(keys, " ")},
+		{Label: "Delete", Action: "docker rmi " + strings.Join(imageNames, " ")},
 	}
-	if len(keys) == 1 {
-		imageName := keys[0]
-		items = append(items, menuItem{Label: "Exec (docker degbug)", Action: "docker debug " + imageName})
+	if len(imageNames) == 1 {
+		items = append(items, menuItem{Label: "Exec (docker degbug)", Action: "docker debug " + imageNames[0]})
 	}
 	if common.CommandExists("pbcopy") {
-		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + strings.Join(keys, " ") + " | pbcopy"})
+		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + strings.Join(imageNames, " ") + " | pbcopy"})
 	}
 	return items, nil
 }

@@ -14,13 +14,13 @@ func (OllamaActionType) prompt() string {
 	return "ollama-actions>"
 }
 
-func (OllamaActionType) menuItems(modelNames []string) ([]menuItem, error) {
-	if len(modelNames) > 1 {
-		return nil, errors.New("target of ollama-action must be a single line")
+func (OllamaActionType) menuItems(lines []string) ([]menuItem, error) {
+	if len(lines) == 0 || len(lines) > 1 {
+		return nil, errors.New("must be a single line")
 	}
 
-	modelName := strings.TrimSpace(strings.Join(modelNames, " "))
-	log.Printf("Model name: %s", modelNames)
+	modelName := strings.TrimSpace(lines[0])
+	log.Printf("Model name: %s", modelName)
 
 	items := []menuItem{
 		{Label: "Show", Action: "ollama show " + modelName},

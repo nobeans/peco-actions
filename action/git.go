@@ -14,12 +14,12 @@ func (GitActionType) prompt() string {
 	return "git-actions>"
 }
 
-func (GitActionType) menuItems(commitIds []string) ([]menuItem, error) {
-	if len(commitIds) > 1 {
-		return nil, errors.New("target of git-action must be a single line")
+func (GitActionType) menuItems(lines []string) ([]menuItem, error) {
+	if len(lines) == 0 || len(lines) > 1 {
+		return nil, errors.New("must be a single line")
 	}
 
-	commitId := strings.TrimSpace(strings.Join(commitIds, " "))
+	commitId := strings.TrimSpace(lines[0])
 	log.Printf("Commit ID: %s", commitId)
 
 	items := []menuItem{

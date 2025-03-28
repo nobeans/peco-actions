@@ -14,12 +14,12 @@ func (ServerActionType) prompt() string {
 	return "server-actions>"
 }
 
-func (ServerActionType) menuItems(hosts []string) ([]menuItem, error) {
-	if len(hosts) > 1 {
-		return nil, errors.New("target of server-action must be a single line")
+func (ServerActionType) menuItems(lines []string) ([]menuItem, error) {
+	if len(lines) == 0 || len(lines) > 1 {
+		return nil, errors.New("must be a single line")
 	}
 
-	host := strings.TrimSpace(strings.Join(hosts, " "))
+	host := strings.TrimSpace(lines[0])
 	log.Printf("Host: %s", host)
 
 	var items = []menuItem{}

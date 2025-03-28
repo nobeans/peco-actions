@@ -17,11 +17,11 @@ func (DockerContainerActionType) prompt() string {
 }
 
 func (DockerContainerActionType) menuItems(lines []string) ([]menuItem, error) {
-	if len(lines) > 1 {
-		return nil, errors.New("target of docker-container-action must be a single line")
+	if len(lines) == 0 || len(lines) > 1 {
+		return nil, errors.New("must be a single line")
 	}
 
-	line := strings.TrimSpace(strings.Join(lines, " "))
+	line := strings.TrimSpace(lines[0])
 	log.Printf("Input line: %s", line)
 
 	// Expected the table format of `docker ps` command
