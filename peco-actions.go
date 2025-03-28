@@ -21,6 +21,7 @@ options:
   --git                 actions for a commit id
   --docker-container    actions for a docker container
   --docker-image        actions for a docker image
+  --ollama              actions for a ollama model
   --generic             actions for generic only using adhoc menu`
 )
 
@@ -39,6 +40,7 @@ type (
 		git             bool
 		dockerContainer bool
 		dockerImage     bool
+		ollama          bool
 		generic         bool
 	}
 )
@@ -54,6 +56,7 @@ func newOptions() *Options {
 		git:             false,
 		dockerContainer: false,
 		dockerImage:     false,
+		ollama:          false,
 		generic:         false,
 	}
 }
@@ -81,6 +84,8 @@ func parseOptions(args common.Args) *Options {
 			opts.dockerContainer = true
 		case "--docker-image":
 			opts.dockerImage = true
+		case "--ollama":
+			opts.ollama = true
 		case "--generic":
 			opts.generic = true
 		default:
@@ -104,6 +109,8 @@ func actionType(opts *Options) action.Type {
 		return new(action.DockerContainerActionType)
 	case opts.dockerImage:
 		return new(action.DockerImageActionType)
+	case opts.ollama:
+		return new(action.OllamaActionType)
 	case opts.generic:
 		return new(action.GenericActionType)
 	default:

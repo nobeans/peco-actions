@@ -35,6 +35,7 @@ options:
   --git                 actions for a commit id
   --docker-container    actions for a docker container
   --docker-image        actions for a docker image
+  --ollama              actions for a ollama
   --generic             actions for generic only using adhoc menu
 ```
 
