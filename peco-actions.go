@@ -14,7 +14,7 @@ const (
 options:
   -h,--help             show this usage
   -v,--version          display the version
-  -D,--debug            display the version
+  -D,--debug            show debug logs
   --file                actions for file path(s)
   --process             actions for a process id
   --server              actions for a host/IP-address
