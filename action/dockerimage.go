@@ -44,5 +44,6 @@ func (DockerImageActionType) menuItems(lines []string) ([]menuItem, error) {
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + strings.Join(imageNames, " ") + " | pbcopy"})
 	}
+	items = append(items, RenderAdhocMenuItems(strings.Join(imageNames, " "))...)
 	return items, nil
 }

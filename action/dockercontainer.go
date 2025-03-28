@@ -43,5 +43,6 @@ func (DockerContainerActionType) menuItems(lines []string) ([]menuItem, error) {
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + containerName + " | pbcopy"})
 	}
+	items = append(items, RenderAdhocMenuItems(containerName)...)
 	return items, nil
 }

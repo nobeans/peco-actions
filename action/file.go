@@ -70,6 +70,7 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n '" + expandedQuotedPaths + "' | pbcopy"})
 	}
+	items = append(items, RenderAdhocMenuItems(quotedPaths)...)
 	return items, nil
 }
 

@@ -38,5 +38,6 @@ func (ServerActionType) menuItems(lines []string) ([]menuItem, error) {
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy IP address to Clipboard", Action: "ping -c 1 " + host + " | grep PING | sed -E 's/.*\\((.*)\\):.*/\\\\1/' | pbcopy"})
 	}
+	items = append(items, RenderAdhocMenuItems(host)...)
 	return items, nil
 }

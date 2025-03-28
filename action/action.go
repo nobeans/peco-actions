@@ -49,29 +49,32 @@ func Resolve(actionType Type, r io.Reader) (string, error) {
 	return act, nil
 }
 
+func RenderAdhocMenuItems(target string) []menuItem {
+	// You can specify adhoc menu items via environment variable PECO_ACTIONS__ADHOC_MENU
+	// "TARGET" can be replaced with the selected target.
+	// e.g. export PECO_ACTIONS__ADHOC_MENU="Show file name=echo TARGET;Show file info=ls -al TARGET"
+	adhocMenu := cmn.Env("PECO_ACTIONS__ADHOC_MENU", "")
+	if len(adhocMenu) == 0 {
+		return nil
+	}
+
+	var items []menuItem
+	for _, adhocLine := range strings.Split(adhocMenu, ";") {
+		tokens := cmn.Map(strings.SplitN(adhocLine, "=", 2), strings.TrimSpace)
+		items = append(items, menuItem{
+			Label:  tokens[0],
+			Action: strings.ReplaceAll(tokens[1], "TARGET", target),
+		})
+	}
+	return items
+}
+
 func renderMenuItems(actionType Type, lines []string) ([]menuItem, error) {
 	items, err := actionType.menuItems(lines)
 	if err != nil {
 		return nil, err
 	}
 	log.Printf("Menu items: %#v", items)
-
-	// You can specify adhoc menu items via environment variable PECO_ACTIONS__ADHOC_MENU
-	// e.g. export PECO_ACTIONS__ADHOC_MENU="A=B;C=D"
-	adhocMenu := cmn.Env("PECO_ACTIONS__ADHOC_MENU", "")
-	if len(adhocMenu) > 0 {
-		var adhocItems []menuItem
-		for _, adhocLine := range strings.Split(adhocMenu, ";") {
-			tokens := cmn.Map(strings.SplitN(adhocLine, "=", 2), strings.TrimSpace)
-			adhocItems = append(adhocItems, menuItem{
-				Label:  tokens[0],
-				Action: tokens[1],
-			})
-		}
-		items = append(adhocItems, items...) // append to top
-		log.Printf("Menu items (applied adhoc): %#v", items)
-	}
-
 	return items, nil
 }
 

@@ -32,5 +32,6 @@ func (OllamaActionType) menuItems(lines []string) ([]menuItem, error) {
 		items = append(items, menuItem{Label: "Copy to Clipboard (full)", Action: "echo -n " + modelName + " | pbcopy"})
 		items = append(items, menuItem{Label: "Copy to Clipboard (only base name)", Action: "echo -n " + strings.Split(modelName, ":")[0] + " | pbcopy"})
 	}
+	items = append(items, RenderAdhocMenuItems(modelName)...)
 	return items, nil
 }

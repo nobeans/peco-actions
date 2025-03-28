@@ -32,5 +32,6 @@ func (GitActionType) menuItems(lines []string) ([]menuItem, error) {
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + commitId + " | pbcopy"})
 	}
+	items = append(items, RenderAdhocMenuItems(commitId)...)
 	return items, nil
 }

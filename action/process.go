@@ -27,5 +27,6 @@ func (ProcessActionType) menuItems(lines []string) ([]menuItem, error) {
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n '" + pids + "' | pbcopy"})
 	}
+	items = append(items, RenderAdhocMenuItems(pids)...)
 	return items, nil
 }
