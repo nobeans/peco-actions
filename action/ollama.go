@@ -23,9 +23,9 @@ func (OllamaActionType) menuItems(lines []string) ([]menuItem, error) {
 	log.Printf("Model name: %s", modelName)
 
 	items := []menuItem{
-		{Label: "Show", Action: "ollama show " + modelName},
 		{Label: "Run", Action: "ollama run " + modelName},
 		{Label: "Stop", Action: "ollama stop " + modelName},
+		{Label: "Show", Action: "ollama show -v" + modelName},
 		{Label: "Remove", Action: "ollama rm " + modelName},
 	}
 	if common.CommandExists("pbcopy") {
