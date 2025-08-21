@@ -39,7 +39,8 @@ func (DockerImageActionType) menuItems(lines []string) ([]menuItem, error) {
 		{Label: "Delete", Action: "docker rmi " + strings.Join(imageNames, " ")},
 	}
 	if len(imageNames) == 1 {
-		items = append(items, menuItem{Label: "Exec (docker degbug)", Action: "docker debug " + imageNames[0]})
+		items = append(items, menuItem{Label: "Run", Action: "docker run -it --rm " + imageNames[0]})
+		items = append(items, menuItem{Label: "Debug", Action: "docker debug " + imageNames[0]})
 	}
 	if common.CommandExists("pbcopy") {
 		items = append(items, menuItem{Label: "Copy to Clipboard", Action: "echo -n " + strings.Join(imageNames, " ") + " | pbcopy"})
