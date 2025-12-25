@@ -22,6 +22,11 @@ func (FileActionType) prompt() string {
 func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 	paths, lineNumOfFirstFile := linesToPaths(lines)
 
+	// Normalize paths: remove "./" prefix
+	paths = common.Map(paths, func(p string) string {
+		return strings.TrimPrefix(p, "./")
+	})
+
 	quotedPaths := strings.TrimSpace(strings.Join(quoteIfRequired(paths), " "))
 	log.Printf("quotedPaths: %s", quotedPaths)
 
