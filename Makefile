@@ -20,7 +20,7 @@ GOCMD = go
 all: clean peco-actions
 
 peco-actions: peco-actions.go
-	$(GOCMD) build --ldflags "$(LDFLAGS)" $<
+	$(GOCMD) build --ldflags "$(LDFLAGS)" -o $@ .
 
 
 clean:

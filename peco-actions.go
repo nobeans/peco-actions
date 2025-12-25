@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime/debug"
 
 	"github.com/nobeans/peco-actions/action"
 	"github.com/nobeans/peco-actions/common"
@@ -24,10 +25,6 @@ options:
   --docker-image        actions for a docker image
   --ollama              actions for a ollama model
   --generic             actions for generic only using adhoc menu`
-)
-
-var (
-	Version = "1.10.0"
 )
 
 type (
@@ -142,7 +139,7 @@ func main() {
 		fmt.Println(USAGE)
 		os.Exit(0)
 	case opts.version:
-		fmt.Println("peco-actions version " + Version)
+		fmt.Println("peco-actions version " + version())
 		os.Exit(0)
 	}
 
@@ -153,4 +150,14 @@ func main() {
 	fmt.Printf("%s", act)
 
 	os.Exit(0)
+}
+
+// version returns the version embedded by Go at build time.
+// go install with a version (e.g. @latest) embeds the tag of the module, so no hard-coded version is needed.
+func version() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok || info.Main.Version == "" {
+		return "unknown"
+	}
+	return info.Main.Version
 }
