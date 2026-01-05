@@ -73,10 +73,10 @@ func (FileActionType) menuItems(lines []string) ([]menuItem, error) {
 		{Label: "Show file type", Action: "file " + quotedPaths},
 	}...)
 	if common.CommandExists("pbcopy") {
-		items = append(items, menuItem{Label: "Copy to Clipboard (full)", Action: "echo -n '" + expandedQuotedPaths + "' | pbcopy"})
+		items = append(items, menuItem{Label: "Copy to Clipboard (name only)", Action: "echo -n '" + strings.Join(common.Map(paths, filepath.Base), " ") + "' | pbcopy"})
 		items = append(items, menuItem{Label: "Copy to Clipboard (relative)", Action: "echo -n '" + quotedPaths + "' | pbcopy"})
 		items = append(items, menuItem{Label: "Copy to Clipboard (relative for claude code)", Action: "echo -n '" + strings.Join(common.Map(paths, func(p string) string { return "@" + p }), " ") + "' | pbcopy"})
-		items = append(items, menuItem{Label: "Copy to Clipboard (name only)", Action: "echo -n '" + strings.Join(common.Map(paths, filepath.Base), " ") + "' | pbcopy"})
+		items = append(items, menuItem{Label: "Copy to Clipboard (full)", Action: "echo -n '" + expandedQuotedPaths + "' | pbcopy"})
 	}
 	items = append(items, RenderAdhocMenuItems(quotedPaths)...)
 	return items, nil

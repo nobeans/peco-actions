@@ -29,9 +29,9 @@ func (EnvActionType) menuItems(lines []string) ([]menuItem, error) {
 		{Label: "Unset", Action: "unset " + name},
 	}
 	if common.CommandExists("pbcopy") {
-		items = append(items, menuItem{Label: "Copy to Clipboard (full)", Action: "echo -n '" + entry + "' | pbcopy"})
 		items = append(items, menuItem{Label: "Copy to Clipboard (name only)", Action: "echo -n '" + name + "' | pbcopy"})
 		items = append(items, menuItem{Label: "Copy to Clipboard (value only)", Action: "echo -n '" + value + "' | pbcopy"})
+		items = append(items, menuItem{Label: "Copy to Clipboard (full)", Action: "echo -n '" + entry + "' | pbcopy"})
 	}
 	items = append(items, RenderAdhocMenuItems(entry)...)
 	return items, nil
