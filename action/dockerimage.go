@@ -29,10 +29,7 @@ func (DockerImageActionType) menuItems(lines []string) ([]menuItem, error) {
 		imageName := strings.TrimSpace(tokens[0])
 		log.Printf("Image name [%d]: %s", i, imageName)
 
-		tag := strings.TrimSpace(tokens[1])
-		log.Printf("Tag [%d]: %s", i, tag)
-
-		imageNames = append(imageNames, fmt.Sprintf("%s:%s", imageName, tag))
+		imageNames = append(imageNames, imageName)
 	}
 
 	items := []menuItem{
